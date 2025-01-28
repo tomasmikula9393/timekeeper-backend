@@ -1,0 +1,294 @@
+openapi: 3.0.0
+info:
+  title: TimeKeeper API
+  description: API for managing time entries
+  version: 1.0.0
+servers:
+  - url: http://localhost:8085
+paths:
+  /register:
+    post:
+      tags: [ Users ]
+      operationId: registration
+      summary: Register a new user.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegistrationRequest'
+      responses:
+        '200':
+          description: Successful registration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+        '400':
+          description: Registration failed (e.g., username or email already taken).
+  /login:
+    post:
+      tags: [ Users ]
+      operationId: login
+      summary: Authenticate user and return JWT token.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthRequest'
+      responses:
+        '200':
+          description: Successful authentication.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: Invalid credentials.
+  /items/{id}:
+    parameters:
+      - $ref: '#/components/parameters/id'
+    delete:
+      tags: [ Items ]
+      operationId: deleteItem
+      summary: Delete item from DB by id
+      responses:
+        '200':
+          description: Successful response
+    put:
+      tags: [ Items ]
+      operationId: updateItem
+      summary: Update item from DB by id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemDto'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemDto'
+    get:
+      tags: [ Items ]
+      operationId: getItem
+      summary: Get item from DB by id
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemDto'
+  /items:
+    get:
+      tags: [ Items ]
+      parameters:
+        - $ref: '#/components/parameters/pageable'
+        - $ref: '#/components/parameters/search'
+      operationId: getItems
+      summary: Get all items from DB for logged user
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemsPaginatedListDto'
+    post:
+      tags: [ Items ]
+      operationId: createItem
+      summary: Create new item
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemDto'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemDto'
+components:
+  schemas:
+    AuthRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          description: Username of the user.
+          example: "admin"
+        password:
+          type: string
+          description: Password of the user.
+          example: "securePassword123"
+      required:
+        - username
+        - password
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          description: JWT token for authentication.
+          example: "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwiaWF0IjoxNjcxNzUyMjAwLCJleHAiOjE2NzE3ODgwMDB9.Zq_xhP3kQlZPZ91l1VZysoSlLUTLJ3Pa8oUq7cNE6jg"
+      required:
+        - token
+    RegistrationRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        surname:
+          type: string
+        username:
+          type: string
+          description: Username for the new user.
+          example: "newUser"
+        password:
+          type: string
+          description: Password for the new user.
+          example: "securePassword123"
+        email:
+          type: string
+          format: email
+          description: Email address of the new user.
+          example: "newuser@example.com"
+      required:
+        - username
+        - password
+        - email
+    UserDto:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        username:
+          type: string
+          description: Username of the user.
+        email:
+          type: string
+          format: email
+          description: Email address of the user.
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Role'
+    ItemsPaginatedListDto:
+      allOf:
+        - $ref: '#/components/schemas/Paged'
+      properties:
+        list:
+          type: array
+          default: [ ]
+          items:
+            $ref: '#/components/schemas/ItemDto'
+    ItemDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique identifier of the item.
+        title:
+          type: string
+          description: Title of the item.
+        description:
+          type: string
+          description: Description of the item.
+        validityFrom:
+          type: string
+          format: date-time
+          description: Start date of the item's validity.
+        validityTo:
+          type: string
+          format: date-time
+          description: End date of the item's validity.
+        user:
+          $ref: '#/components/schemas/UserDto'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+        updatedBy:
+          type: string
+    Id:
+      type: integer
+      format: int64
+    Pageable:
+      type: object
+      properties:
+        page:
+          type: integer
+          description: Page number of the query.
+          example: 0
+          default: 0
+        size:
+          type: integer
+          description: Page size of the query.
+          example: 20
+          default: 50
+        sort:
+          type: string
+          description: "Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported."
+          example: name,asc
+
+    Paged:
+      type: object
+      discriminator:
+        propertyName: pagedType
+      properties:
+        count:
+          type: integer
+          default: 0
+          description: Number of filter list items
+        totalCount:
+          type: integer
+          format: int64
+          default: 0
+          description: Number of all list items
+        page:
+          type: integer
+          default: 1
+          description: Page number
+        size:
+          type: integer
+          default: 50
+          description: Items per page
+    Role:
+      type: string
+      enum:
+        - ADMIN
+        - USER
+        - GUEST
+      description: Roles that a user can have in the system.
+
+  parameters:
+    id:
+      name: id
+      in: path
+      required: true
+      description: 'Identifier of entity'
+      schema:
+        $ref: '#/components/schemas/Id'
+    search:
+      in: query
+      name: search
+      schema:
+        type: string
+      description: Search parameters for the query.
+      example: createdBy:Aston* AND (structureVersion.createdAt<1681391768819 OR createdAt>1681391768819)
+    pageable:
+      in: query
+      name: pageable
+      schema:
+        $ref: "#/components/schemas/Pageable"
