@@ -13,7 +13,8 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**") // Povolit všechny cesty
-                        .allowedOrigins("http://localhost:5173") // Povolit front-end hostitele
+                        .allowedOrigins("http://localhost:5173",
+                                "https://timekeeper-frontend.onrender.com") // Povolit front-end hostitele
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Povolené HTTP metody
                         .allowedHeaders("*") // Povolit všechny hlavičky
                         .allowCredentials(true)
