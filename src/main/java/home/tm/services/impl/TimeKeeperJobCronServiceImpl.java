@@ -3,18 +3,15 @@ package home.tm.services.impl;
 import home.tm.model.Item;
 import home.tm.model.enums.Stav;
 import home.tm.repositories.ItemRepository;
-import home.tm.repositories.UserRepository;
 import home.tm.services.TimeKeeperJobCronService;
 import lombok.RequiredArgsConstructor;
 import org.quartz.JobExecutionContext;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -28,6 +25,7 @@ public class TimeKeeperJobCronServiceImpl implements TimeKeeperJobCronService {
 
     @Override
     public void checkValidation(JobExecutionContext context) {
+        // prošlé
         List<Item> expiredItems = itemRepository.findAllByValidityToIsBeforeAndStavIsNot(LocalDateTime.now(), Stav.EXPIRED.name());
         expiredItems.forEach(item -> {
             sendEmail(
@@ -37,13 +35,24 @@ public class TimeKeeperJobCronServiceImpl implements TimeKeeperJobCronService {
             item.setStav(Stav.EXPIRED.name());
             itemRepository.save(item);
         });
-        List<Item> itemsWeekBeforeExpiration = itemRepository.findAllByValidityToIsBetweenAndStavIsNot(LocalDateTime.now(), LocalDateTime.now().plusDays(8L), Stav.CHECKING.name());
+        // týden před
+        List<Item> itemsWeekBeforeExpiration = itemRepository.findAllByValidityToIsBetweenAndStavIsNot(LocalDateTime.now(), LocalDateTime.now().plusDays(8L), Stav.WEEK_TO_EXP.name());
         itemsWeekBeforeExpiration.forEach(item -> {
             sendEmail(
                     item.getUser().getEmail(),
                     String.format("Vašemu hlídanému záznamu %s brzy skončí platnost - %s ", item.getTitle(), item.getValidityTo())
                     );
-            item.setStav(Stav.CHECKING.name());
+            item.setStav(Stav.WEEK_TO_EXP.name());
+            itemRepository.save(item);
+        });
+        // měsíc před
+        List<Item> itemsMothBeforeExpiration = itemRepository.findAllByValidityToIsBetweenAndStavIsNot(LocalDateTime.now(), LocalDateTime.now().plusMonths(1L), Stav.MONTH_TO_EXP.name());
+        itemsMothBeforeExpiration.forEach(item -> {
+            sendEmail(
+                    item.getUser().getEmail(),
+                    String.format("Vašemu hlídanému záznamu %s brzy skončí platnost - %s ", item.getTitle(), item.getValidityTo())
+            );
+            item.setStav(Stav.MONTH_TO_EXP.name());
             itemRepository.save(item);
         });
     }

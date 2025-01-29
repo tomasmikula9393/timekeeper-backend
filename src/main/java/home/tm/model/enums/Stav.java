@@ -3,5 +3,6 @@ package home.tm.model.enums;
 public enum Stav {
     VALID,
     EXPIRED,
-    CHECKING
+    WEEK_TO_EXP,
+    MONTH_TO_EXP
 }
