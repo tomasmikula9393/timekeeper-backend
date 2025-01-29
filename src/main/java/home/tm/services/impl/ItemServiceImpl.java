@@ -11,6 +11,7 @@ import home.tm.model.Item;
 import home.tm.repositories.ItemRepository;
 import home.tm.security.service.SecurityService;
 import home.tm.services.ItemService;
+import home.tm.utils.InputValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,7 +44,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto createItem(ItemDto itemDto) {
-        //todo validation
+        InputValidator.validateItem(itemDto);
         Item item = itemRepository.save(itemConverter.toEntity(itemDto));
         return itemConverter.toDto(item);
     }
