@@ -21,7 +21,7 @@ public class JwtUtil {
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 2)) // 2 hodiny
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 8)) // 2 hodiny
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
     }
@@ -40,6 +40,7 @@ public class JwtUtil {
     private Claims extractAllClaims(String token) {
         return Jwts.parser()
                 .setSigningKey(SECRET_KEY)
+                .setAllowedClockSkewSeconds(600)
                 .parseClaimsJws(token)
                 .getBody();
     }

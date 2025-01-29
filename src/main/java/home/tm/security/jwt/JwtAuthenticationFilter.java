@@ -10,8 +10,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
 
 @Component
 @RequiredArgsConstructor
@@ -30,16 +32,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws java.io.IOException, javax.servlet.ServletException {
 
-        final String authHeader = request.getHeader("Authorization");
-        final String token;
+        String token = "";
         final String username;
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            chain.doFilter(request, response);
-            return;
+
+        if (request.getCookies() != null) {
+            token = Arrays.stream(request.getCookies())
+                    .filter(cookie -> "authToken".equals(cookie.getName()))
+                    .map(Cookie::getValue)
+                    .findFirst()
+                    .orElse(null);
         }
 
-        token = authHeader.substring(7);
         username = jwtUtil.extractUsername(token);
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {

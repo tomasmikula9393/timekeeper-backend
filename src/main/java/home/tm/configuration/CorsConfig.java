@@ -18,6 +18,7 @@ public class CorsConfig {
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Povolené HTTP metody
                         .allowedHeaders("*") // Povolit všechny hlavičky
                         .allowCredentials(true)
+                        .exposedHeaders("Authorization")
                         .maxAge(3600); // Cache preflight odpovědi na 1 hodinu
             }
         };
