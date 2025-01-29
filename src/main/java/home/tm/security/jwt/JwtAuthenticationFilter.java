@@ -37,7 +37,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String token = "";
         final String username;
-        log.info("LOGGER TADY KOUKNI! request.getCookies() = " + request.getCookies());
         if (request.getCookies() != null) {
             token = Arrays.stream(request.getCookies())
                     .filter(cookie -> "authToken".equals(cookie.getName()))
@@ -45,7 +44,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     .findFirst()
                     .orElse(null);
         }
-        log.info("LOGGER TADY KOUKNI! token = " + token);
         username = jwtUtil.extractUsername(token);
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {

@@ -30,7 +30,7 @@ public class TimeKeeperJobCronServiceImpl implements TimeKeeperJobCronService {
         expiredItems.forEach(item -> {
             sendEmail(
                     item.getUser().getEmail(),
-                    String.format("Vašemu hlídanému záznamu %s skončila platnost - %s ", item.getTitle(), item.getValidityTo())
+                    String.format("Vašemu hlídanému záznamu [%s] skončila platnost - %s ", item.getTitle(), item.getValidityTo())
                     );
             item.setStav(Stav.EXPIRED.name());
             itemRepository.save(item);
@@ -40,7 +40,7 @@ public class TimeKeeperJobCronServiceImpl implements TimeKeeperJobCronService {
         itemsWeekBeforeExpiration.forEach(item -> {
             sendEmail(
                     item.getUser().getEmail(),
-                    String.format("Vašemu hlídanému záznamu %s brzy skončí platnost - %s ", item.getTitle(), item.getValidityTo())
+                    String.format("Vašemu hlídanému záznamu [%s] brzy skončí platnost - %s ", item.getTitle(), item.getValidityTo())
                     );
             item.setStav(Stav.WEEK_TO_EXP.name());
             itemRepository.save(item);
@@ -50,7 +50,7 @@ public class TimeKeeperJobCronServiceImpl implements TimeKeeperJobCronService {
         itemsMothBeforeExpiration.forEach(item -> {
             sendEmail(
                     item.getUser().getEmail(),
-                    String.format("Vašemu hlídanému záznamu %s brzy skončí platnost - %s ", item.getTitle(), item.getValidityTo())
+                    String.format("Vašemu hlídanému záznamu [%s] brzy skončí platnost - %s ", item.getTitle(), item.getValidityTo())
             );
             item.setStav(Stav.MONTH_TO_EXP.name());
             itemRepository.save(item);
