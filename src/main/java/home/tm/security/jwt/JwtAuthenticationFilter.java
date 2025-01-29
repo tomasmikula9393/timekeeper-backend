@@ -2,6 +2,7 @@ package home.tm.security.jwt;
 
 import home.tm.security.service.impl.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 
 @Component
+@Slf4j
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -35,7 +37,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String token = "";
         final String username;
-
+        log.info("LOGGER TADY KOUKNI! request.getCookies() = " + request.getCookies());
         if (request.getCookies() != null) {
             token = Arrays.stream(request.getCookies())
                     .filter(cookie -> "authToken".equals(cookie.getName()))
@@ -43,7 +45,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     .findFirst()
                     .orElse(null);
         }
-
+        log.info("LOGGER TADY KOUKNI! token = " + token);
         username = jwtUtil.extractUsername(token);
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
