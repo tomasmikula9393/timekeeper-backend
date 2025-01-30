@@ -5,6 +5,7 @@ import home.tm.model.enums.Stav;
 import home.tm.repositories.ItemRepository;
 import home.tm.services.TimeKeeperJobCronService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobExecutionContext;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -17,6 +18,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class TimeKeeperJobCronServiceImpl implements TimeKeeperJobCronService {
 
     private final ItemRepository itemRepository;
@@ -32,6 +34,7 @@ public class TimeKeeperJobCronServiceImpl implements TimeKeeperJobCronService {
                     item.getUser().getEmail(),
                     String.format("Vašemu hlídanému záznamu [%s] skončila platnost - %s ", item.getTitle(), item.getValidityTo())
                     );
+            log.info("Pro item s ID [{}] a nazvem [{}] nastavuje stav EXPIRED", item.getId(), item.getTitle());
             item.setStav(Stav.EXPIRED.name());
             itemRepository.save(item);
         });
@@ -42,6 +45,7 @@ public class TimeKeeperJobCronServiceImpl implements TimeKeeperJobCronService {
                     item.getUser().getEmail(),
                     String.format("Vašemu hlídanému záznamu [%s] brzy skončí platnost - %s ", item.getTitle(), item.getValidityTo())
                     );
+            log.info("Pro item s ID [{}] a nazvem [{}] nastavuje stav WEEK_TO_EXP", item.getId(), item.getTitle());
             item.setStav(Stav.WEEK_TO_EXP.name());
             itemRepository.save(item);
         });
@@ -54,6 +58,7 @@ public class TimeKeeperJobCronServiceImpl implements TimeKeeperJobCronService {
                     item.getUser().getEmail(),
                     String.format("Vašemu hlídanému záznamu [%s] brzy skončí platnost - %s ", item.getTitle(), item.getValidityTo())
             );
+            log.info("Pro item s ID [{}] a nazvem [{}] nastavuje stav MONTH_TO_EXP", item.getId(), item.getTitle());
             item.setStav(Stav.MONTH_TO_EXP.name());
             itemRepository.save(item);
         });
