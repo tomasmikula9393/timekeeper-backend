@@ -10,5 +10,6 @@ import java.util.List;
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Long> {
     List<Item> findAllByValidityToIsBeforeAndStavIsNot(LocalDateTime now, String stav);
-    List<Item> findAllByValidityToIsBetweenAndStavIsNot(LocalDateTime from, LocalDateTime to, String stav);
+    List<Item> findAllByValidityToIsBetweenAndStavIsNot(LocalDateTime from, LocalDateTime to, String stav1);
+    List<Item> findAllByValidityToIsBetweenAndStavIsNotAndStavIsNot(LocalDateTime from, LocalDateTime to, String stav1, String stav2);
 }

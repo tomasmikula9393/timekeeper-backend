@@ -46,7 +46,9 @@ public class TimeKeeperJobCronServiceImpl implements TimeKeeperJobCronService {
             itemRepository.save(item);
         });
         // měsíc před
-        List<Item> itemsMothBeforeExpiration = itemRepository.findAllByValidityToIsBetweenAndStavIsNot(LocalDateTime.now(), LocalDateTime.now().plusMonths(1L), Stav.MONTH_TO_EXP.name());
+        List<Item> itemsMothBeforeExpiration = itemRepository.findAllByValidityToIsBetweenAndStavIsNotAndStavIsNot(
+                LocalDateTime.now(), LocalDateTime.now().plusMonths(1L), Stav.MONTH_TO_EXP.name(), Stav.WEEK_TO_EXP.name()
+        );
         itemsMothBeforeExpiration.forEach(item -> {
             sendEmail(
                     item.getUser().getEmail(),
