@@ -31,6 +31,8 @@ public class UserConverter {
         UserDto dto = new UserDto();
         dto.setId(entity.getId());
         dto.setUsername(entity.getUsername());
+        dto.setName(entity.getName());
+        dto.setSurname(entity.getSurname());
         return dto;
     }
 }
