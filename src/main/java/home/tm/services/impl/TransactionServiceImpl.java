@@ -10,10 +10,21 @@ import home.tm.model.Transaction;
 import home.tm.repositories.TransactionRepository;
 import home.tm.security.service.SecurityService;
 import home.tm.services.TransactionService;
+import home.tm.utils.SearchParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import javax.persistence.criteria.Predicate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static home.tm.exceptions.ExceptionMessage.ITEM_WAS_NOT_FOUND;
 import static home.tm.exceptions.ExceptionMessage.USER_IS_NOT_AUTHORIZED;
@@ -47,9 +58,23 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public TransactionPaginatedListDto getTransactions(Pageable pageable, String search) {
-        //todo spring-search
-        Page<Transaction> transactions = transactionRepository.findAll(pageable);
+        Map<String, String> filters = SearchParser.parseSearchQuery(search);
         TransactionPaginatedListDto dto = new TransactionPaginatedListDto();
+
+        Page<Transaction> transactions = transactionRepository.findAll((root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            if (filters.containsKey("year")) {
+                predicates.add(criteriaBuilder.equal(criteriaBuilder.function("YEAR", Integer.class, root.get("date")), Integer.parseInt(filters.get("year"))));
+            }
+            if (filters.containsKey("month")) {
+                predicates.add(criteriaBuilder.equal(criteriaBuilder.function("MONTH", Integer.class, root.get("date")), Integer.parseInt(filters.get("month"))));
+            }
+            if (filters.containsKey("type")) {
+                predicates.add(criteriaBuilder.equal(root.get("type"), filters.get("type")));
+            }
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        }, pageable);
+
         dto.setList(transactionConverter.toListDto(transactions.getContent()));
         dto.setCount(transactions.getPageable().getPageSize());
         dto.setPage(transactions.getPageable().getPageNumber());

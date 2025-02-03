@@ -33,7 +33,6 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemsPaginatedListDto getItems(Pageable pageable, String search) {
-        //todo spring-search
         Page<Item> items = itemRepository.findAll(pageable);
         ItemsPaginatedListDto dto = new ItemsPaginatedListDto();
         dto.setList(itemConverter.toListDto(items.getContent()));

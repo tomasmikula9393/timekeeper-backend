@@ -120,6 +120,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/pageable'
         - $ref: '#/components/parameters/search'
+
       operationId: getTransactions
       summary: Get all transactions from DB for logged user
       responses:

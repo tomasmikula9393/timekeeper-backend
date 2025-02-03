@@ -12,7 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/api/auth")
+@RequestMapping("/ws/rest")
 @RequiredArgsConstructor
 public class TransactionController implements TransactionsApi {
 
