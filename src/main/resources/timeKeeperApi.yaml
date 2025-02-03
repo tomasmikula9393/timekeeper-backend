@@ -215,6 +215,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TaskDto'
+  /tasks/{id}/done:
+    parameters:
+      - $ref: '#/components/parameters/id'
+    put:
+      tags: [ Tasks ]
+      operationId: taskDone
+      summary: Update task from DB by id to DONE
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskDto'
   /tasks/{id}:
     parameters:
       - $ref: '#/components/parameters/id'
@@ -361,6 +375,8 @@ components:
           type: string
         category:
           type: string
+        done:
+          type: boolean
         deadline:
           type: string
           format: date-time

@@ -11,6 +11,7 @@ CREATE TABLE task (
                              category VARCHAR(50) NOT NULL,
                              description VARCHAR(50),
                              deadline DATE,
+                             done BOOLEAN DEFAULT FALSE,
                              user_id BIGINT NOT NULL,
                              CONSTRAINT fk_item_user FOREIGN KEY (user_id) REFERENCES "user" (id_user) ON DELETE SET NULL
 

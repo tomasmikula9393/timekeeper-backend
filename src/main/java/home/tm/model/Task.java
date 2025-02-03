@@ -47,4 +47,7 @@ public class Task {
 
     @Column(name = "deadline")
     private LocalDateTime deadline;
+
+    @Column(name = "done")
+    private Boolean done;
 }

@@ -15,4 +15,6 @@ public interface TaskService {
     TaskPaginatedListDto getTasks(Pageable pageable, String search);
 
     TaskDto updateTask(Long id, TaskDto dto);
+
+    TaskDto taskDone(Long id);
 }

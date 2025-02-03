@@ -43,4 +43,9 @@ public class TaskController implements TasksApi {
     public ResponseEntity<TaskDto> updateTask(Long id, TaskDto dto) {
         return new ResponseEntity<>(taskService.updateTask(id, dto), HttpStatus.OK);
     }
+
+    @Override
+    public ResponseEntity<TaskDto> taskDone(Long id) {
+        return new ResponseEntity<>(taskService.taskDone(id), HttpStatus.OK);
+    }
 }

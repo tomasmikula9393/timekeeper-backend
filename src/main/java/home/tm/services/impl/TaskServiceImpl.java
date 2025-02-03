@@ -58,6 +58,13 @@ public class TaskServiceImpl implements TaskService {
         return taskConverter.toDto(task);
     }
 
+    @Override
+    public TaskDto taskDone(Long id) {
+        Task task = getTaskById(id);
+        task.setDone(true);
+        return taskConverter.toDto(taskRepository.save(task));
+    }
+
     private Task getTaskById(Long id) {
         Task task = taskRepository.findById(id).orElseThrow(
                 () -> new NotFoundException(NEBYLO_NALEZENO, String.format(TASK_WAS_NOT_FOUND.getMessage(), id), ERROR)

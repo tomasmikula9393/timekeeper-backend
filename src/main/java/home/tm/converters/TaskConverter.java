@@ -25,6 +25,7 @@ public class TaskConverter {
         dto.setDescription(entity.getDescription());
         dto.setCategory(entity.getCategory());
         dto.setDeadline(entity.getDeadline());
+        dto.setDone(entity.getDone());
         return dto;
     }
 
