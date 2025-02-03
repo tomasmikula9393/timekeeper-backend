@@ -3,9 +3,6 @@ package home.tm.services.impl;
 import home.tm.TimeKeeper.api.models.ItemDto;
 import home.tm.TimeKeeper.api.models.ItemsPaginatedListDto;
 import home.tm.converters.ItemConverter;
-import home.tm.exceptions.ExceptionMessage;
-import home.tm.exceptions.ExceptionType;
-import home.tm.exceptions.ForbiddenException;
 import home.tm.exceptions.NotFoundException;
 import home.tm.model.Item;
 import home.tm.repositories.ItemRepository;
@@ -19,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import static home.tm.exceptions.ExceptionMessage.ITEM_WAS_NOT_FOUND;
 import static home.tm.exceptions.ExceptionMessage.USER_IS_NOT_AUTHORIZED;
-import static home.tm.exceptions.ExceptionType.CHYBA_AUTH;
 import static home.tm.exceptions.ExceptionType.NEBYLO_NALEZENO;
 import static home.tm.exceptions.SeverityEnum.ERROR;
 

@@ -183,6 +183,75 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TransactionDto'
+  /tasks:
+    get:
+      tags: [ Tasks ]
+      parameters:
+        - $ref: '#/components/parameters/pageable'
+        - $ref: '#/components/parameters/search'
+
+      operationId: getTasks
+      summary: Get all tasks from DB for logged user
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskPaginatedListDto'
+    post:
+      tags: [ Tasks ]
+      operationId: createTask
+      summary: Create new task
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskDto'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskDto'
+  /tasks/{id}:
+    parameters:
+      - $ref: '#/components/parameters/id'
+    delete:
+      tags: [ Tasks ]
+      operationId: deleteTask
+      summary: Delete task from DB by id
+      responses:
+        '200':
+          description: Successful response
+    put:
+      tags: [ Tasks ]
+      operationId: updateTask
+      summary: Update task from DB by id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskDto'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskDto'
+    get:
+      tags: [ Tasks ]
+      operationId: getTask
+      summary: Get task from DB by id
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskDto'
 components:
   schemas:
     AuthRequest:
@@ -270,6 +339,31 @@ components:
           default: [ ]
           items:
             $ref: '#/components/schemas/TransactionDto'
+    TaskPaginatedListDto:
+      allOf:
+        - $ref: '#/components/schemas/Paged'
+      properties:
+        list:
+          type: array
+          default: [ ]
+          items:
+            $ref: '#/components/schemas/TaskDto'
+    TaskDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique identifier of the item.
+        name:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        deadline:
+          type: string
+          format: date-time
     TransactionDto:
       type: object
       properties:
