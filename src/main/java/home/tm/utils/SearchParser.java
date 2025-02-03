@@ -4,21 +4,20 @@ import lombok.experimental.UtilityClass;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @UtilityClass
 public class SearchParser {
 
-    public Map<String, String> parseSearchQuery(String search) {
+    public static Map<String, String> parseSearchQuery(String search) {
         Map<String, String> filters = new HashMap<>();
 
         if (search != null && !search.isEmpty()) {
-            Pattern pattern = Pattern.compile("(\\w+):([\\w*.-]+)");
-            Matcher matcher = pattern.matcher(search);
-
-            while (matcher.find()) {
-                filters.put(matcher.group(1), matcher.group(2));
+            String[] parts = search.split(" AND ");
+            for (String part : parts) {
+                String[] keyValue = part.split("=");
+                if (keyValue.length == 2) {
+                    filters.put(keyValue[0].trim(), keyValue[1].trim());
+                }
             }
         }
         return filters;

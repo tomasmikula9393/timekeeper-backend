@@ -13,7 +13,9 @@ import home.tm.services.TransactionService;
 import home.tm.utils.SearchParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -63,23 +65,34 @@ public class TransactionServiceImpl implements TransactionService {
 
         Page<Transaction> transactions = transactionRepository.findAll((root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
+
             if (filters.containsKey("year")) {
-                predicates.add(criteriaBuilder.equal(criteriaBuilder.function("YEAR", Integer.class, root.get("date")), Integer.parseInt(filters.get("year"))));
+                predicates.add(criteriaBuilder.equal(
+                        criteriaBuilder.function("YEAR", Integer.class, root.get("transactionDate")),
+                        Integer.parseInt(filters.get("year"))
+                ));
             }
+
             if (filters.containsKey("month")) {
-                predicates.add(criteriaBuilder.equal(criteriaBuilder.function("MONTH", Integer.class, root.get("date")), Integer.parseInt(filters.get("month"))));
+                predicates.add(criteriaBuilder.equal(
+                        criteriaBuilder.function("MONTH", Integer.class, root.get("transactionDate")),
+                        Integer.parseInt(filters.get("month"))
+                ));
             }
+
             if (filters.containsKey("type")) {
                 predicates.add(criteriaBuilder.equal(root.get("type"), filters.get("type")));
             }
+
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
-        }, pageable);
+        }, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.ASC, "transactionDate")));
 
         dto.setList(transactionConverter.toListDto(transactions.getContent()));
         dto.setCount(transactions.getPageable().getPageSize());
         dto.setPage(transactions.getPageable().getPageNumber());
         return dto;
     }
+
 
     @Override
     public TransactionDto updateTransaction(Long id, TransactionDto dto) {
