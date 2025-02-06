@@ -187,20 +187,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TrainingDto'
-  /training-diary/user:
-    get:
-      tags: [ TrainingDiary ]
-      operationId: getTrainingDiaries
-      summary: Get users training diaries from DB by id
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/TrainingDiaryBaseDto'
   /training-diary/{id}:
     parameters:
       - $ref: '#/components/parameters/id'
@@ -212,7 +198,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TrainingDiaryDto'
+              $ref: '#/components/schemas/TrainingDiaryBaseDto'
       responses:
         '200':
           description: Successful response
@@ -247,7 +233,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TrainingDiaryDto'
+              $ref: '#/components/schemas/TrainingDiaryBaseDto'
       responses:
         '200':
           description: Successful response
@@ -255,6 +241,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TrainingDiaryDto'
+    get:
+      tags: [ TrainingDiary ]
+      operationId: getTrainingDiaries
+      summary: Get users training diaries from DB by id
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TrainingDiaryBaseDto'
   /transactions:
     get:
       tags: [ Transactions ]
@@ -540,9 +539,6 @@ components:
           format: int64
         name:
           type: string
-        week:
-          type: integer
-          format: int32
         year:
           type: integer
           format: int32
@@ -562,6 +558,9 @@ components:
           format: int64
         type:
           type: string
+        week:
+          type: integer
+          format: int32
         day:
           type: string
         note:

@@ -20,7 +20,7 @@ public class TrainingDiaryController implements TrainingDiaryApi {
     private final TrainingDiaryService trainingDiaryService;
     
     @Override
-    public ResponseEntity<TrainingDiaryDto> createTrainingDiary(TrainingDiaryDto dto) {
+    public ResponseEntity<TrainingDiaryDto> createTrainingDiary(TrainingDiaryBaseDto dto) {
         return new ResponseEntity<>(trainingDiaryService.createTrainingDiary(dto), HttpStatus.OK);
     }
 
@@ -36,7 +36,7 @@ public class TrainingDiaryController implements TrainingDiaryApi {
     }
 
     @Override
-    public ResponseEntity<TrainingDiaryDto> updateTrainingDiary(Long id, TrainingDiaryDto dto) {
+    public ResponseEntity<TrainingDiaryDto> updateTrainingDiary(Long id, TrainingDiaryBaseDto dto) {
         return new ResponseEntity<>(trainingDiaryService.updateTrainingDiary(id, dto), HttpStatus.OK);
     }
 

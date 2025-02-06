@@ -8,13 +8,13 @@ import java.util.List;
 
 public interface TrainingDiaryService {
 
-    TrainingDiaryDto createTrainingDiary(TrainingDiaryDto dto);
+    TrainingDiaryDto createTrainingDiary(TrainingDiaryBaseDto dto);
 
     void deleteTrainingDiary(Long id);
 
     TrainingDiaryDto getTrainingDiary(Long id);
 
-    TrainingDiaryDto updateTrainingDiary(Long id, TrainingDiaryDto dto);
+    TrainingDiaryDto updateTrainingDiary(Long id, TrainingDiaryBaseDto dto);
 
     TrainingDiary getTrainingDiaryById(Long id);
 

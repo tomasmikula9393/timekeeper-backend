@@ -8,11 +8,15 @@ import home.tm.model.TrainingDiary;
 import home.tm.repositories.TrainingRepository;
 import home.tm.services.TrainingDiaryService;
 import home.tm.services.TrainingService;
+import home.tm.utils.ParamsParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.Predicate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static home.tm.exceptions.ExceptionMessage.TRAINING_WAS_NOT_FOUND;
 import static home.tm.exceptions.ExceptionType.NEBYLO_NALEZENO;
@@ -47,7 +51,17 @@ public class TrainingServiceImpl implements TrainingService {
     @Override
     public List<TrainingDto> getTrainings(Long diaryId, Pageable pageable, String search) {
         TrainingDiary trainingDiary = trainingDiaryService.getTrainingDiaryById(diaryId);
-        return trainingConverter.toListDto(trainingRepository.findAllByTrainingDiary(trainingDiary));
+        Map<String, String> filters = ParamsParser.parseSearchQuery(search);
+
+        List<Training> trainings = trainingRepository.findAll((root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            if (filters.containsKey("week")) {
+                predicates.add(criteriaBuilder.equal(root.get("week"), Integer.parseInt(filters.get("week"))));
+            }
+            predicates.add(criteriaBuilder.equal(root.get("trainingDiary"), trainingDiary.getId()));
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        });
+        return trainingConverter.toListDto(trainings);
     }
 
     @Override

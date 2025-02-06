@@ -28,7 +28,7 @@ public class TrainingDiaryServiceImpl implements TrainingDiaryService {
 
 
     @Override
-    public TrainingDiaryDto createTrainingDiary(TrainingDiaryDto dto) {
+    public TrainingDiaryDto createTrainingDiary(TrainingDiaryBaseDto dto) {
         TrainingDiary trainingDiary = trainingDiaryRepository.save(trainingDiaryConverter.toEntity(dto));
         return trainingDiaryConverter.toDto(trainingDiary);
     }
@@ -47,7 +47,7 @@ public class TrainingDiaryServiceImpl implements TrainingDiaryService {
     }
 
     @Override
-    public TrainingDiaryDto updateTrainingDiary(Long id, TrainingDiaryDto dto) {
+    public TrainingDiaryDto updateTrainingDiary(Long id, TrainingDiaryBaseDto dto) {
         TrainingDiary trainingDiary = trainingDiaryRepository.save(trainingDiaryConverter.toEntity(dto, getTrainingDiaryById(id)));
         return trainingDiaryConverter.toDto(trainingDiary);
     }

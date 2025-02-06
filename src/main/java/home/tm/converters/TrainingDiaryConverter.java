@@ -18,14 +18,13 @@ public class TrainingDiaryConverter {
     private final TrainingRepository trainingRepository;
     private final TrainingConverter trainingConverter;
 
-    public TrainingDiary toEntity(TrainingDiaryDto dto) {
+    public TrainingDiary toEntity(TrainingDiaryBaseDto dto) {
         return toEntity(dto, new TrainingDiary());
     }
 
-    public TrainingDiary toEntity(TrainingDiaryDto dto, TrainingDiary entity) {
+    public <T extends TrainingDiaryBaseDto> TrainingDiary toEntity(T dto, TrainingDiary entity) {
         entity.setId(dto.getId() == null ? null : dto.getId());
         entity.setYear(dto.getYear());
-        entity.setWeek(dto.getWeek());
         entity.setName(dto.getName());
         entity.setUser(securityService.getCurrentUser());
         return entity;
@@ -43,14 +42,10 @@ public class TrainingDiaryConverter {
     public <T extends TrainingDiaryBaseDto> T toBaseDto(TrainingDiary entity, T dto) {
         dto.setId(entity.getId());
         dto.setYear(entity.getYear());
-        dto.setWeek(entity.getWeek());
         dto.setName(entity.getName());
         return dto;
     }
 
-    public List<TrainingDiaryDto> toListDto(List<TrainingDiary> data) {
-        return data.stream().map(this::toDto).toList();
-    }
     public List<TrainingDiaryBaseDto> toListBaseDto(List<TrainingDiary> data) {
         return data.stream().map(this::toBaseDto).toList();
     }

@@ -9,7 +9,6 @@ CREATE TABLE training_diary
 (
     id_training_diary BIGINT DEFAULT nextval('id_training_diary_seq') PRIMARY KEY,
     name              VARCHAR(50) NOT NULL,
-    week              INTEGER     NOT NULL, -- Týden v roce (1–53)
     year              INTEGER     NOT NULL, -- Rok
     user_id           BIGINT      NOT NULL, -- Vlastník deníku
     CONSTRAINT fk_training_diary_user FOREIGN KEY (user_id) REFERENCES "user" (id_user) ON DELETE SET NULL
@@ -28,6 +27,7 @@ CREATE TABLE training
 (
     id_training       BIGINT DEFAULT nextval('id_training_seq') PRIMARY KEY,
     type              VARCHAR(10),
+    week              INTEGER NOT NULL,
     day               VARCHAR(10),
     note              VARCHAR(100),
     training_diary_id BIGINT NOT NULL,

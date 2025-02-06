@@ -24,9 +24,6 @@ public class TrainingDiary {
     @Column(name = "name", length = 50, nullable = false)
     private String name;
 
-    @Column(name = "week", nullable = false)
-    private Integer week;
-
     @Column(name = "year", nullable = false)
     private Integer year;
 

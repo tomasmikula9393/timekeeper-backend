@@ -30,6 +30,9 @@ public class Training {
     @OneToMany(mappedBy = "training", cascade = CascadeType.ALL)
     private List<Exercise> exercises;
 
+    @Column(name = "week", nullable = false)
+    private Integer week;
+
     @Column(name = "day", length = 10)
     private String day;
 

@@ -3,6 +3,7 @@ package home.tm.converters;
 import home.tm.TimeKeeper.api.models.TrainingDto;
 import home.tm.model.Training;
 import home.tm.model.TrainingDiary;
+import home.tm.model.enums.TrainingType;
 import home.tm.repositories.ExerciseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -27,6 +28,7 @@ public class TrainingConverter {
     private TrainingDto toDto(Training entity, TrainingDto dto) {
         dto.setId(entity.getId());
         dto.setNote(entity.getNote());
+        dto.setWeek(entity.getWeek());
         dto.setDay(entity.getDay());
         dto.setType(entity.getType().name());
         dto.setExercises(exerciseConverter.toListDto(exerciseRepository.findAllByTraining(entity)));
@@ -42,7 +44,9 @@ public class TrainingConverter {
     public Training toEntity(TrainingDto dto, Training entity) {
         entity.setId(dto.getId() == null ? null : dto.getId());
         entity.setNote(dto.getNote());
+        entity.setType(TrainingType.getType(dto.getType()));
         entity.setDay(dto.getDay());
+        entity.setWeek(dto.getWeek());
         entity.setExercises(exerciseConverter.toListEntity(dto.getExercises()));
         return entity;
     }
