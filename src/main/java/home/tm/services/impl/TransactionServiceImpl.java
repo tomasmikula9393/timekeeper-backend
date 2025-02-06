@@ -1,32 +1,25 @@
 package home.tm.services.impl;
 
-import home.tm.TimeKeeper.api.models.ItemsPaginatedListDto;
 import home.tm.TimeKeeper.api.models.TransactionDto;
 import home.tm.TimeKeeper.api.models.TransactionPaginatedListDto;
 import home.tm.converters.TransactionConverter;
 import home.tm.exceptions.NotFoundException;
-import home.tm.model.Item;
 import home.tm.model.Transaction;
 import home.tm.repositories.TransactionRepository;
 import home.tm.security.service.SecurityService;
 import home.tm.services.TransactionService;
-import home.tm.utils.SearchParser;
+import home.tm.utils.ParamsParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import static home.tm.exceptions.ExceptionMessage.ITEM_WAS_NOT_FOUND;
 import static home.tm.exceptions.ExceptionMessage.USER_IS_NOT_AUTHORIZED;
@@ -60,7 +53,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public TransactionPaginatedListDto getTransactions(Pageable pageable, String search) {
-        Map<String, String> filters = SearchParser.parseSearchQuery(search);
+        Map<String, String> filters = ParamsParser.parseSearchQuery(search);
         TransactionPaginatedListDto dto = new TransactionPaginatedListDto();
 
         Page<Transaction> transactions = transactionRepository.findAll((root, query, criteriaBuilder) -> {

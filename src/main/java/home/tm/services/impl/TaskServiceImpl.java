@@ -8,8 +8,10 @@ import home.tm.model.Task;
 import home.tm.repositories.TaskRepository;
 import home.tm.security.service.SecurityService;
 import home.tm.services.TaskService;
+import home.tm.utils.ParamsParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 

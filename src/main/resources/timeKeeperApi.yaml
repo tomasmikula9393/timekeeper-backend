@@ -114,6 +114,147 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ItemDto'
+  /training-diary/{diaryId}/trainings/{id}:
+    parameters:
+      - $ref: '#/components/parameters/diaryId'
+      - $ref: '#/components/parameters/id'
+    delete:
+      tags: [ Trainings ]
+      operationId: deleteTraining
+      summary: Delete training from DB by id
+      responses:
+        '200':
+          description: Successful response
+    put:
+      tags: [ Trainings ]
+      operationId: updateTraining
+      summary: Update training from DB by id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrainingDto'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainingDto'
+    get:
+      tags: [ Trainings ]
+      operationId: getTraining
+      summary: Get training from DB by id
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainingDto'
+  /training-diary/{id}/trainings:
+    parameters:
+      - $ref: '#/components/parameters/id'
+    get:
+      tags: [ Trainings ]
+      parameters:
+        - $ref: '#/components/parameters/pageable'
+        - $ref: '#/components/parameters/search'
+      operationId: getTrainings
+      summary: Get all trainings from DB for logged user
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TrainingDto'
+    post:
+      tags: [ Trainings ]
+      operationId: createTraining
+      summary: Create new training
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrainingDto'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainingDto'
+  /training-diary/user:
+    get:
+      tags: [ TrainingDiary ]
+      operationId: getTrainingDiaries
+      summary: Get users training diaries from DB by id
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TrainingDiaryBaseDto'
+  /training-diary/{id}:
+    parameters:
+      - $ref: '#/components/parameters/id'
+    put:
+      tags: [ TrainingDiary ]
+      operationId: updateTrainingDiary
+      summary: Update training diary from DB by id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrainingDiaryDto'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainingDiaryDto'
+    get:
+      tags: [ TrainingDiary ]
+      operationId: getTrainingDiary
+      summary: Get training diary from DB by id
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainingDiaryDto'
+    delete:
+      tags: [ TrainingDiary ]
+      operationId: deleteTrainingDiary
+      summary: Delete training diary from DB by id
+      responses:
+        '200':
+          description: Successful response
+  /training-diary:
+    post:
+      tags: [ TrainingDiary ]
+      operationId: createTrainingDiary
+      summary: Create new training diary
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrainingDiaryDto'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainingDiaryDto'
   /transactions:
     get:
       tags: [ Transactions ]
@@ -344,6 +485,15 @@ components:
           default: [ ]
           items:
             $ref: '#/components/schemas/ItemDto'
+    TrainingPaginatedListDto:
+      allOf:
+        - $ref: '#/components/schemas/Paged'
+      properties:
+        list:
+          type: array
+          default: [ ]
+          items:
+            $ref: '#/components/schemas/TrainingDto'
     TransactionPaginatedListDto:
       allOf:
         - $ref: '#/components/schemas/Paged'
@@ -380,6 +530,69 @@ components:
         deadline:
           type: string
           format: date-time
+    TrainingDiaryBaseDto:
+      type: object
+      discriminator:
+        propertyName: TrainingDiaryBaseDto
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        week:
+          type: integer
+          format: int32
+        year:
+          type: integer
+          format: int32
+    TrainingDiaryDto:
+      allOf:
+        - $ref: "#/components/schemas/TrainingDiaryBaseDto"
+      properties:
+        trainings:
+          type: array
+          items:
+            $ref: "#/components/schemas/TrainingDto"
+    TrainingDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        type:
+          type: string
+        day:
+          type: string
+        note:
+          type: string
+        exercises:
+          type: array
+          items:
+            $ref: "#/components/schemas/ExerciseDto"
+    ExerciseDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        set:
+          type: integer
+          format: int32
+        rep:
+          type: integer
+          format: int32
+        duration:
+          type: integer
+          format: int32
+        distance:
+          type: number
+          format: double
+        speed:
+          type: number
+          format: double
     TransactionDto:
       type: object
       properties:
@@ -488,6 +701,13 @@ components:
   parameters:
     id:
       name: id
+      in: path
+      required: true
+      description: 'Identifier of entity'
+      schema:
+        $ref: '#/components/schemas/Id'
+    diaryId:
+      name: diaryId
       in: path
       required: true
       description: 'Identifier of entity'

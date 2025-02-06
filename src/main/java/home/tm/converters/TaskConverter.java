@@ -35,12 +35,14 @@ public class TaskConverter {
         entity.setDescription(dto.getDescription());
         entity.setCategory(dto.getCategory());
         entity.setDeadline(dto.getDeadline());
+        entity.setDone(dto.getDone());
         return entity;
     }
 
     public Task toEntity(TaskDto dto) {
         Task task = toEntity(new Task(), dto);
         task.setUser(securityService.getCurrentUser());
+        task.setDone(false);
         return task;
     }
 
