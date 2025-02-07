@@ -562,6 +562,9 @@ components:
           type: integer
           format: int32
         day:
+          type: integer
+          format: int32
+        name:
           type: string
         note:
           type: string
@@ -590,6 +593,9 @@ components:
           type: number
           format: double
         speed:
+          type: number
+          format: double
+        weight:
           type: number
           format: double
     TransactionDto:

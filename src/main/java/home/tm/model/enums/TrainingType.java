@@ -4,13 +4,21 @@ import lombok.Getter;
 
 @Getter
 public enum TrainingType {
-    AEROBIC, // Běh, kolo, plavání
-    ANAEROBIC; // Silový trénink
+    AEROBIC("Kardio"), // Běh, kolo, plavání
+    ANAEROBIC("Silový"); // Silový trénink s činkami
+
+    private final String name;
+
+    TrainingType(String name) {
+        this.name = name;
+    }
 
     public static TrainingType getType(String type) {
-        if (type.equalsIgnoreCase("aerobic")) {
-            return TrainingType.AEROBIC;
+        for (TrainingType trainingType : TrainingType.values()) {
+            if (trainingType.name().equalsIgnoreCase(type)) {
+                return trainingType;
+            }
         }
-        return TrainingType.ANAEROBIC;
+        throw new IllegalArgumentException("Neplatný typ tréninku: " + type);
     }
 }

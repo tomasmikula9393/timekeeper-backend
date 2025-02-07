@@ -27,6 +27,7 @@ public class ExerciseConverter {
         dto.setSpeed(entity.getSpeed());
         dto.setDistance(entity.getDistance());
         dto.setDuration(entity.getDuration());
+        dto.setWeight(entity.getWeight());
         return dto;
     }
 
@@ -46,6 +47,7 @@ public class ExerciseConverter {
         entity.setSpeed(dto.getSpeed());
         entity.setDistance(dto.getDistance());
         entity.setDuration(dto.getDuration());
+        entity.setWeight(dto.getWeight());
         return entity;
     }
 }

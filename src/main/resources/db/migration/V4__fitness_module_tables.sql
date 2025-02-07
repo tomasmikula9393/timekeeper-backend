@@ -27,8 +27,9 @@ CREATE TABLE training
 (
     id_training       BIGINT DEFAULT nextval('id_training_seq') PRIMARY KEY,
     type              VARCHAR(10),
+    name              VARCHAR(20),
     week              INTEGER NOT NULL,
-    day               VARCHAR(10),
+    day               INTEGER NOT NULL,
     note              VARCHAR(100),
     training_diary_id BIGINT NOT NULL,
     CONSTRAINT fk_training_training_diary FOREIGN KEY (training_diary_id) REFERENCES "training_diary" (id_training_diary) ON DELETE SET NULL

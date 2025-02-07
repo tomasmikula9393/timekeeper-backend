@@ -28,6 +28,7 @@ public class TrainingConverter {
     private TrainingDto toDto(Training entity, TrainingDto dto) {
         dto.setId(entity.getId());
         dto.setNote(entity.getNote());
+        dto.setName(entity.getName());
         dto.setWeek(entity.getWeek());
         dto.setDay(entity.getDay());
         dto.setType(entity.getType().name());
@@ -44,6 +45,7 @@ public class TrainingConverter {
     public Training toEntity(TrainingDto dto, Training entity) {
         entity.setId(dto.getId() == null ? null : dto.getId());
         entity.setNote(dto.getNote());
+        entity.setName(dto.getName());
         entity.setType(TrainingType.getType(dto.getType()));
         entity.setDay(dto.getDay());
         entity.setWeek(dto.getWeek());

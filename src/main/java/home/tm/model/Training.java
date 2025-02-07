@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -27,19 +28,31 @@ public class Training {
     @Column(name = "type", length = 10, nullable = false)
     private TrainingType type;
 
-    @OneToMany(mappedBy = "training", cascade = CascadeType.ALL)
-    private List<Exercise> exercises;
+    @OneToMany(mappedBy = "training", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Exercise> exercises = new ArrayList<>();;
 
     @Column(name = "week", nullable = false)
     private Integer week;
 
-    @Column(name = "day", length = 10)
-    private String day;
+    @Column(name = "day", length = 10,  nullable = false)
+    private Integer day;
 
     @Column(name = "note", length = 100)
     private String note;
 
+    @Column(name = "name", length = 20)
+    private String name;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "training_diary_id", referencedColumnName = "id_training_diary", nullable = false)
     private TrainingDiary trainingDiary;
+
+    public void setExercises(List<Exercise> exercises) {
+        this.exercises.clear();
+        for (Exercise exercise : exercises) {
+            exercise.setTraining(this);
+        }
+        this.exercises.addAll(exercises);
+    }
+
 }
