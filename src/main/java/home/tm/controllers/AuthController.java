@@ -38,21 +38,6 @@ public class AuthController implements UsersApi {
 
         String token = jwtUtil.generateToken(authRequest.getUsername());
 
-        // **Získání `HttpServletResponse` z kontextu**
-        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        if (attr != null) {
-            HttpServletResponse response = attr.getResponse();
-            if (response != null) {
-                ResponseCookie cookie = ResponseCookie.from("authToken", token)
-                        .httpOnly(true)
-                        .secure(true) // Pouze pro HTTPS
-                        .path("/")
-                        .sameSite("None") // Pro cross-origin požadavky
-                        .build();
-
-                response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
-            }
-        }
 
         return ResponseEntity.ok(new AuthResponse(token));
     }

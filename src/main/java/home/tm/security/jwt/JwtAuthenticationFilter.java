@@ -1,60 +1,54 @@
 package home.tm.security.jwt;
 
-import home.tm.security.service.impl.CustomUserDetailsService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import javax.servlet.FilterChain;
-import javax.servlet.http.Cookie;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
+import java.io.IOException;
 
 @Component
-@Slf4j
-@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
-    private final CustomUserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
 
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) {
-        String path = request.getServletPath();
-        return path.startsWith("/api/auth/");
+    public JwtAuthenticationFilter(JwtUtil jwtUtil, UserDetailsService userDetailsService) {
+        this.jwtUtil = jwtUtil;
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-            throws java.io.IOException, javax.servlet.ServletException {
+            throws IOException, ServletException {
 
-        String token = "";
-        final String username;
-        if (request.getCookies() != null) {
-            token = Arrays.stream(request.getCookies())
-                    .filter(cookie -> "authToken".equals(cookie.getName()))
-                    .map(Cookie::getValue)
-                    .findFirst()
-                    .orElse(null);
+        // ✅ Získání tokenu z HTTP hlavičky
+        final String authorizationHeader = request.getHeader("Authorization");
+        String token = null;
+        String username = null;
+
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            token = authorizationHeader.substring(7); // 🛠 Odstranění "Bearer " prefixu
+            username = jwtUtil.extractUsername(token);
         }
-        username = jwtUtil.extractUsername(token);
 
+        // ✅ Pokud je username platné a už není autentizované
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
+            // ✅ Ověření platnosti tokenu
             if (!jwtUtil.isTokenExpired(token)) {
-                // Nastavte autentizaci do Spring Security contextu
                 SecurityContextHolder.getContext().setAuthentication(
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()));
+                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities())
+                );
             }
         }
+
         chain.doFilter(request, response);
     }
 }
