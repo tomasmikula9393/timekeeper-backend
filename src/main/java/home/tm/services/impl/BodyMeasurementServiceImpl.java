@@ -4,7 +4,6 @@ import home.tm.TimeKeeper.api.models.BodyMeasurementDto;
 import home.tm.converters.BodyMeasurementConverter;
 import home.tm.exceptions.NotFoundException;
 import home.tm.model.BodyMeasurement;
-import home.tm.model.Training;
 import home.tm.model.TrainingDiary;
 import home.tm.repositories.BodyMeasurementRepository;
 import home.tm.services.BodyMeasurementService;
@@ -12,7 +11,6 @@ import home.tm.services.TrainingDiaryService;
 import home.tm.utils.ParamsParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.StreamingHttpOutputMessage;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Predicate;
@@ -21,9 +19,6 @@ import java.util.List;
 import java.util.Map;
 
 import static home.tm.exceptions.ExceptionMessage.BODY_MEASUREMENT_WAS_NOT_FOUND;
-import static home.tm.exceptions.ExceptionMessage.TRAINING_DIARY_WAS_NOT_FOUND;
-import static home.tm.exceptions.ExceptionMessage.TRAINING_WAS_NOT_FOUND;
-import static home.tm.exceptions.ExceptionMessage.USER_IS_NOT_AUTHORIZED;
 import static home.tm.exceptions.ExceptionType.NEBYLO_NALEZENO;
 import static home.tm.exceptions.SeverityEnum.ERROR;
 
