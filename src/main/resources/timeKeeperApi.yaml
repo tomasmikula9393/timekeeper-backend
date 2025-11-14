@@ -6,7 +6,7 @@ info:
 servers:
   - url: http://localhost:8085
 paths:
-  /api/ai/training/weekly-summary:
+  /training/weekly-summary:
     post:
       summary: AI Weekly Training Summary
       tags: [ AI Training ]
@@ -690,11 +690,9 @@ components:
         weekStart:
           type: string
           format: date
-          example: "2025-03-10"
         bodyWeight:
           type: number
           format: double
-          example: 90.0
         strength:
           type: array
           items:
@@ -713,77 +711,68 @@ components:
     StrengthTrainingEntry:
       type: object
       properties:
-        exercise:
+        name:
           type: string
-          example: "Bench Press"
-        sets:
+        day:
           type: integer
-          example: 5
-        reps:
+        week:
           type: integer
-          example: 5
+        note:
+          type: string
+        exercises:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExerciseEntry'
+    ExerciseEntry:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        set:
+          type: integer
+        rep:
+          type: integer
+        duration:
+          type: integer
+        distance:
+          type: number
+        speed:
+          type: number
         weight:
           type: number
-          format: double
-          example: 90.0
-        date:
-          type: string
-          format: date
-          example: "2025-03-11"
-      required:
-        - exercise
-        - sets
-        - reps
-        - weight
-        - date
+
     CardioTrainingEntry:
       type: object
       properties:
-        type:
+        name:
           type: string
-          example: "Running"
-        durationMinutes:
+        day:
           type: integer
-          example: 30
-        distanceKm:
+        week:
+          type: integer
+        duration:
           type: number
-          format: double
-          nullable: true
-          example: 5.2
-        avgHeartRate:
-          type: integer
-          nullable: true
-          example: 145
-        date:
+        distance:
+          type: number
+        speed:
+          type: number
+        note:
           type: string
-          format: date
-          example: "2025-03-12"
-      required:
-        - type
-        - durationMinutes
-        - date
     BoxTrainingEntry:
       type: object
       properties:
-        durationMinutes:
+        name:
+          type: string
+        day:
           type: integer
-          example: 60
-        intensity:
+        week:
+          type: integer
+        duration:
+          type: integer
+        note:
           type: string
-          enum: [ low, medium, high ]
-          example: "high"
-        sparring:
-          type: boolean
-          example: true
-        date:
-          type: string
-          format: date
-          example: "2025-03-14"
-      required:
-        - durationMinutes
-        - intensity
-        - sparring
-        - date
     WeeklyTrainingSummary:
       type: object
       properties:

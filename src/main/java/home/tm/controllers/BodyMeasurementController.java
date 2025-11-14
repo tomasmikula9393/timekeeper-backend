@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ws/rest/")
+@RequestMapping("/ws/rest")
 @RequiredArgsConstructor
 public class BodyMeasurementController implements BodyMeasurementsApi {
 

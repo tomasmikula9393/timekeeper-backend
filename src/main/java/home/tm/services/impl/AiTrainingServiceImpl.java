@@ -1,5 +1,9 @@
 package home.tm.services.impl;
 
+import home.tm.TimeKeeper.api.models.BoxTrainingEntry;
+import home.tm.TimeKeeper.api.models.CardioTrainingEntry;
+import home.tm.TimeKeeper.api.models.ExerciseEntry;
+import home.tm.TimeKeeper.api.models.StrengthTrainingEntry;
 import home.tm.TimeKeeper.api.models.WeeklyTrainingRequest;
 import home.tm.TimeKeeper.api.models.WeeklyTrainingSummary;
 import home.tm.services.AiTrainingService;
@@ -32,27 +36,102 @@ public class AiTrainingServiceImpl implements AiTrainingService {
 
 
     private String buildPrompt(WeeklyTrainingRequest dto) {
-        return """
-                Jsi profesionální kondiční trenér, silový coach a boxerský trenér.
-                
-                Profil sportovce:
-                Váha: %.1f kg
-                Cíl: zvýšit kondici, sílu, výbušnost a být lepší v boxu.
-                Tréninkový týden: 2× silový trénink, 2× kondice, 1–2× box.
-                
-                Zhodnoť následující tréninky za týden:
-                %s
-                
-                Urob hlubokou a expertní analýzu:
-                - shrnutí týdne
-                - progres
-                - doporučení
-                - riziko únavy / přetrénování
-                - doporučení pro box (technika, výbušnost, kondice)
-                """.formatted(
-                dto.getBodyWeight(),
-                dto.toString()
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("""
+        Jsi profesionální kondiční trenér, silový kouč a boxerský trenér.
+
+        Profil sportovce:
+        - Váha: %s kg
+        - Cíl: zvýšit kondici, sílu, výbušnost a zlepšit výkonnost v boxu.
+        - Struktura týdne: 2× silový trénink, 2× kardio, 1–2× box.
+
+        Zde máš přesný přehled tréninků za týden.
+
+        ===========================
+        SILOVÉ TRÉNINKY
+        ===========================
+        """.formatted(dto.getBodyWeight())
         );
+
+        for (StrengthTrainingEntry s : dto.getStrength()) {
+            sb.append("Trénink: ").append(s.getName()).append("\n");
+            sb.append("Den: ").append(s.getDay()).append("  (týden ").append(s.getWeek()).append(")\n");
+            if (s.getNote() != null && !s.getNote().isEmpty()) {
+                sb.append("Poznámka: ").append(s.getNote()).append("\n");
+            }
+
+            sb.append("Cviky:\n");
+            for (ExerciseEntry e : s.getExercises()) {
+                sb.append(" - ").append(e.getName())
+                        .append(": ").append(e.getSet()).append("×").append(e.getRep())
+                        .append(" (").append(e.getWeight()).append(" kg)").append("\n");
+            }
+            sb.append("\n");
+        }
+
+        sb.append("""
+        ===========================
+        KARDIO TRÉNINKY
+        ===========================
+        """);
+
+        for (CardioTrainingEntry c : dto.getCardio()) {
+            sb.append("Aktivita: ").append(c.getName()).append("\n");
+            sb.append("Den: ").append(c.getDay()).append("  (týden ").append(c.getWeek()).append(")\n");
+            sb.append("Délka: ").append(c.getDuration()).append(" min\n");
+
+            if (c.getDistance() != null) {
+                sb.append("Vzdálenost: ").append(c.getDistance()).append(" km\n");
+            }
+            if (c.getSpeed() != null) {
+                sb.append("Rychlost: ").append(c.getSpeed()).append(" km/h\n");
+            }
+            if (c.getNote() != null && !c.getNote().isEmpty()) {
+                sb.append("Poznámka: ").append(c.getNote()).append("\n");
+            }
+            sb.append("\n");
+        }
+
+        sb.append("""
+        ===========================
+        BOX TRÉNINKY
+        ===========================
+        """);
+
+        for (BoxTrainingEntry b : dto.getBoxing()) {
+            sb.append("Trénink: ").append(b.getName()).append("\n");
+            sb.append("Den: ").append(b.getDay()).append("  (týden ").append(b.getWeek()).append(")\n");
+
+            if (b.getDuration() != null) {
+                sb.append("Délka: ").append(b.getDuration()).append(" min\n");
+            }
+
+            if (b.getNote() != null && !b.getNote().isEmpty()) {
+                sb.append("Poznámka: ").append(b.getNote()).append("\n");
+            }
+            sb.append("\n");
+        }
+
+        sb.append("""
+        ===========================
+        ÚKOL PRO TEBE
+        ===========================
+
+        Udělej hlubokou odbornou analýzu:
+        - shrnutí týdne
+        - progres (síla, kondice, výbušnost, box)
+        - doporučení pro další týden
+        - riziko přetížení / regenerace
+        - doporučení pro box: technika, timing, výbušnost, kombinace
+        - doporučení pro silový trénink: cviky, objem, postupné navyšování
+        - doporučení pro kardio: intenzita, délka, intervaly
+
+        Buď velmi přesný, komplexní, ale lidsky čitelný.
+        """);
+
+        return sb.toString();
     }
 
     private String extractSection(String text, String key) {
