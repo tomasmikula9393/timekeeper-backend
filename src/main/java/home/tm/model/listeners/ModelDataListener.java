@@ -5,8 +5,8 @@ import home.tm.model.base.ModelData;
 import home.tm.security.service.SecurityService;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import java.time.LocalDateTime;
 
 @Slf4j

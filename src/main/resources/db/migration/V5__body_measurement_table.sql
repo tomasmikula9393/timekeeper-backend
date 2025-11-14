@@ -12,7 +12,7 @@ CREATE TABLE body_measurement
     body_fat            DOUBLE PRECISION,
     week                INTEGER NOT NULL,
     day                 INTEGER NOT NULL,
-    training_diary_id   BIGINT  NOT NULL,
-    CONSTRAINT fk_training_training_diary FOREIGN KEY (training_diary_id) REFERENCES "training_diary" (id_training_diary) ON DELETE SET NULL
-
+    training_diary_id   BIGINT NOT NULL,
+    CONSTRAINT fk_body_measurement_training_diary
+        FOREIGN KEY (training_diary_id) REFERENCES training_diary (id_training_diary) ON DELETE CASCADE
 );

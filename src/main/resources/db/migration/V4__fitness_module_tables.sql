@@ -9,12 +9,13 @@ CREATE TABLE training_diary
 (
     id_training_diary BIGINT DEFAULT nextval('id_training_diary_seq') PRIMARY KEY,
     name              VARCHAR(50) NOT NULL,
-    year              INTEGER     NOT NULL, -- Rok
-    user_id           BIGINT      NOT NULL, -- Vlastník deníku
-    CONSTRAINT fk_training_diary_user FOREIGN KEY (user_id) REFERENCES "user" (id_user) ON DELETE SET NULL
+    year              INTEGER     NOT NULL,
+    user_id           BIGINT      NOT NULL,
+    CONSTRAINT fk_training_diary_user
+        FOREIGN KEY (user_id) REFERENCES "user" (id_user) ON DELETE CASCADE
 );
 
-CREATE INDEX pk_id_training_diary ON "training_diary" (id_training_diary);
+CREATE INDEX pk_id_training_diary ON training_diary (id_training_diary);
 
 CREATE SEQUENCE id_training_seq
     START WITH 1
@@ -32,11 +33,11 @@ CREATE TABLE training
     day               INTEGER NOT NULL,
     note              VARCHAR(100),
     training_diary_id BIGINT NOT NULL,
-    CONSTRAINT fk_training_training_diary FOREIGN KEY (training_diary_id) REFERENCES "training_diary" (id_training_diary) ON DELETE SET NULL
-
+    CONSTRAINT fk_training_training_diary
+        FOREIGN KEY (training_diary_id) REFERENCES training_diary (id_training_diary) ON DELETE CASCADE
 );
 
-CREATE INDEX pk_id_training ON "training" (id_training);
+CREATE INDEX pk_id_training ON training (id_training);
 
 --
 CREATE SEQUENCE id_exercise_seq
@@ -56,9 +57,9 @@ CREATE TABLE exercise
     duration    INTEGER,
     distance    DOUBLE PRECISION,
     speed       DOUBLE PRECISION,
-    training_id BIGINT      NOT NULL,
-    CONSTRAINT fk_exercise_training FOREIGN KEY (training_id) REFERENCES "training" (id_training) ON DELETE SET NULL
-
+    training_id BIGINT NOT NULL,
+    CONSTRAINT fk_exercise_training
+        FOREIGN KEY (training_id) REFERENCES training (id_training) ON DELETE CASCADE
 );
 
-CREATE INDEX pk_id_exercise ON "exercise" (id_exercise);
+CREATE INDEX pk_id_exercise ON exercise (id_exercise);

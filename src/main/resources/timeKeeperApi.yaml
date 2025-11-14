@@ -6,6 +6,23 @@ info:
 servers:
   - url: http://localhost:8085
 paths:
+  /api/ai/training/weekly-summary:
+    post:
+      summary: AI Weekly Training Summary
+      tags: [ AI Training ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WeeklyTrainingRequest'
+      responses:
+        '200':
+          description: Weekly AI analysis
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WeeklyTrainingSummary'
   /register:
     post:
       tags: [ Users ]
@@ -667,6 +684,124 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/ExerciseDto"
+    WeeklyTrainingRequest:
+      type: object
+      properties:
+        weekStart:
+          type: string
+          format: date
+          example: "2025-03-10"
+        bodyWeight:
+          type: number
+          format: double
+          example: 90.0
+        strength:
+          type: array
+          items:
+            $ref: '#/components/schemas/StrengthTrainingEntry'
+        cardio:
+          type: array
+          items:
+            $ref: '#/components/schemas/CardioTrainingEntry'
+        boxing:
+          type: array
+          items:
+            $ref: '#/components/schemas/BoxTrainingEntry'
+      required:
+        - weekStart
+        - bodyWeight
+    StrengthTrainingEntry:
+      type: object
+      properties:
+        exercise:
+          type: string
+          example: "Bench Press"
+        sets:
+          type: integer
+          example: 5
+        reps:
+          type: integer
+          example: 5
+        weight:
+          type: number
+          format: double
+          example: 90.0
+        date:
+          type: string
+          format: date
+          example: "2025-03-11"
+      required:
+        - exercise
+        - sets
+        - reps
+        - weight
+        - date
+    CardioTrainingEntry:
+      type: object
+      properties:
+        type:
+          type: string
+          example: "Running"
+        durationMinutes:
+          type: integer
+          example: 30
+        distanceKm:
+          type: number
+          format: double
+          nullable: true
+          example: 5.2
+        avgHeartRate:
+          type: integer
+          nullable: true
+          example: 145
+        date:
+          type: string
+          format: date
+          example: "2025-03-12"
+      required:
+        - type
+        - durationMinutes
+        - date
+    BoxTrainingEntry:
+      type: object
+      properties:
+        durationMinutes:
+          type: integer
+          example: 60
+        intensity:
+          type: string
+          enum: [ low, medium, high ]
+          example: "high"
+        sparring:
+          type: boolean
+          example: true
+        date:
+          type: string
+          format: date
+          example: "2025-03-14"
+      required:
+        - durationMinutes
+        - intensity
+        - sparring
+        - date
+    WeeklyTrainingSummary:
+      type: object
+      properties:
+        summary:
+          type: string
+          example: "Tento týden jsi měl výbornou konzistenci v silovém tréninku..."
+        progress:
+          type: string
+          example: "Zlepšil ses v kondici, běh na 5 km byl o 30 sekund rychlejší..."
+        recommendations:
+          type: string
+          example: "Přidej 1× intervalový běh, drž nižší RPE při box sparringu..."
+        fatigueRisk:
+          type: string
+          example: "Střední riziko přetížení – dva box tréninky + deadlift 150 kg..."
+        combatAdvice:
+          type: string
+          example: "Zaměř se na rychlé kombinace 1–2–3, footwork kruhem, hlava více v pohybu."
     ExerciseDto:
       type: object
       properties:

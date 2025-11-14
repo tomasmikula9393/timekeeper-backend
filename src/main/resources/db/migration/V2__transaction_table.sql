@@ -5,16 +5,17 @@ CREATE SEQUENCE id_transaction_seq
     NO MAXVALUE
     CACHE 1;
 
-CREATE TABLE transaction (
+CREATE TABLE transactions (
                               id_transaction BIGINT DEFAULT nextval('id_transaction_seq') PRIMARY KEY,
-                              type VARCHAR(30) NOT NULL, -- "income", "expense", "monthly_fee"
-                              category VARCHAR(50) NOT NULL, -- např. "Nájem", "Plat", "Potraviny"
-                              description VARCHAR(50),
+                              type VARCHAR(30) NOT NULL,           -- "income", "expense", "monthly_fee"
+                              category VARCHAR(50) NOT NULL,       -- např. "Nájem", "Plat", "Potraviny"
+                              description VARCHAR(100),
                               amount NUMERIC(10, 2) NOT NULL,
                               transaction_date DATE,
-                              user_id BIGINT,
-                              CONSTRAINT fk_item_user FOREIGN KEY (user_id) REFERENCES "user" (id_user) ON DELETE SET NULL
+                              user_id BIGINT NULL,
 
+                              CONSTRAINT fk_transactions_user
+                                  FOREIGN KEY (user_id) REFERENCES "user" (id_user) ON DELETE SET NULL
 );
 
-CREATE INDEX pk_id_transaction ON "transaction" (id_transaction);
+CREATE INDEX pk_id_transaction ON transactions (id_transaction);

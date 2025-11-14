@@ -4,17 +4,17 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -22,10 +22,10 @@ import java.time.LocalDate;
 @Setter
 @Entity
 @RequiredArgsConstructor
-@Table(name = "transaction", schema = "time_keeper", indexes = {
+@Table(name = "transactions", schema = "time_keeper", indexes = {
         @Index(columnList = "id_transaction", name = "pk_id_transaction"),
 })
-public class Transaction {
+public class Transactions {
 
 
     @Id
@@ -43,7 +43,7 @@ public class Transaction {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "amount", precision = 10, scale = 2, nullable = false)
+    @Column(name = "amount", nullable = false)
     private BigDecimal amount;
 
     @Column(name = "transaction_date")

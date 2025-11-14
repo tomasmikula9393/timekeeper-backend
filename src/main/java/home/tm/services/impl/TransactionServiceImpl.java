@@ -4,7 +4,7 @@ import home.tm.TimeKeeper.api.models.TransactionDto;
 import home.tm.TimeKeeper.api.models.TransactionPaginatedListDto;
 import home.tm.converters.TransactionConverter;
 import home.tm.exceptions.NotFoundException;
-import home.tm.model.Transaction;
+import home.tm.model.Transactions;
 import home.tm.repositories.TransactionRepository;
 import home.tm.security.service.SecurityService;
 import home.tm.services.TransactionService;
@@ -16,7 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -36,14 +36,14 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public TransactionDto createTransaction(TransactionDto dto) {
-        Transaction transaction = transactionRepository.save(transactionConverter.toEntity(dto));
-        return transactionConverter.toDto(transaction);
+        Transactions transactions = transactionRepository.save(transactionConverter.toEntity(dto));
+        return transactionConverter.toDto(transactions);
     }
 
     @Override
     public void deleteTransaction(Long id) {
-        Transaction transaction = getTransactionById(id);
-        transactionRepository.delete(transaction);
+        Transactions transactions = getTransactionById(id);
+        transactionRepository.delete(transactions);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class TransactionServiceImpl implements TransactionService {
         Map<String, String> filters = ParamsParser.parseSearchQuery(search);
         TransactionPaginatedListDto dto = new TransactionPaginatedListDto();
 
-        Page<Transaction> transactions = transactionRepository.findAll((root, query, criteriaBuilder) -> {
+        Page<Transactions> transactions = transactionRepository.findAll((root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
             if (filters.containsKey("year")) {
@@ -89,18 +89,18 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public TransactionDto updateTransaction(Long id, TransactionDto dto) {
-        Transaction transaction = transactionRepository.save(transactionConverter.toEntity(dto, getTransactionById(id)));
-        return transactionConverter.toDto(transaction);
+        Transactions transactions = transactionRepository.save(transactionConverter.toEntity(dto, getTransactionById(id)));
+        return transactionConverter.toDto(transactions);
     }
 
-    private Transaction getTransactionById(Long id) {
-        Transaction transaction = transactionRepository.findById(id).orElseThrow(
+    private Transactions getTransactionById(Long id) {
+        Transactions transactions = transactionRepository.findById(id).orElseThrow(
                 () -> new NotFoundException(NEBYLO_NALEZENO, String.format(ITEM_WAS_NOT_FOUND.getMessage(), id), ERROR)
         );
         Long userId = securityService.getCurrentUser().getId();
-        if (!transaction.getUser().getId().equals(userId)) {
+        if (!transactions.getUser().getId().equals(userId)) {
             throw new NotFoundException(NEBYLO_NALEZENO, String.format(USER_IS_NOT_AUTHORIZED.getMessage(), userId), ERROR);
         }
-        return transaction;
+        return transactions;
     }
 }

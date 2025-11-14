@@ -22,22 +22,24 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         http
-                .cors().and()
-                .csrf().disable()
+                .csrf(csrf -> csrf.disable())
+                .cors(cors -> {})
                 .authorizeHttpRequests(auth -> auth
-                        .antMatchers("/api/auth/login").permitAll()
-                        .antMatchers("/api/auth/register").permitAll()
-                        .antMatchers("/ws/rest").authenticated() // Autorizované endpointy
-                        .antMatchers("/**").permitAll() // Povolení OPTIONS požadavků
+                        .requestMatchers("/api/auth/login").permitAll()
+                        .requestMatchers("/api/auth/register").permitAll()
+                        .requestMatchers("/ws/rest/**").authenticated()
+                        .anyRequest().permitAll()
                 )
-        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-        return configuration.getAuthenticationManager();
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
     }
 
     @Bean
@@ -45,4 +47,5 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 }
+
 

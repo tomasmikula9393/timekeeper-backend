@@ -1,7 +1,7 @@
 package home.tm.converters;
 
 import home.tm.TimeKeeper.api.models.TransactionDto;
-import home.tm.model.Transaction;
+import home.tm.model.Transactions;
 import home.tm.model.enums.TransactionType;
 import home.tm.security.service.SecurityService;
 import lombok.RequiredArgsConstructor;
@@ -19,11 +19,11 @@ public class TransactionConverter {
     private final UserConverter userConverter;
     private final SecurityService securityService;
 
-    public TransactionDto toDto(Transaction entity) {
+    public TransactionDto toDto(Transactions entity) {
         return toDto(entity, new TransactionDto());
     }
 
-    public TransactionDto toDto(Transaction entity, TransactionDto transactionDto) {
+    public TransactionDto toDto(Transactions entity, TransactionDto transactionDto) {
         transactionDto.setId(entity.getId());
         transactionDto.setAmount(String.valueOf(entity.getAmount()));
         transactionDto.setCategory(entity.getCategory());
@@ -34,15 +34,15 @@ public class TransactionConverter {
         return transactionDto;
     }
 
-    public List<TransactionDto> toListDto(List<Transaction> data) {
+    public List<TransactionDto> toListDto(List<Transactions> data) {
         return data.stream().map(this::toDto).collect(Collectors.toList());
     }
 
-    public Transaction toEntity(TransactionDto dto) {
-        return toEntity(dto, new Transaction());
+    public Transactions toEntity(TransactionDto dto) {
+        return toEntity(dto, new Transactions());
     }
 
-    public Transaction toEntity(TransactionDto dto, Transaction entity) {
+    public Transactions toEntity(TransactionDto dto, Transactions entity) {
         entity.setCategory(dto.getCategory());
         entity.setDescription(dto.getDescription());
         entity.setType(getType(dto.getType()));
