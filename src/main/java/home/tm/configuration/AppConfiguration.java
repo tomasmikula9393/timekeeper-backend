@@ -1,16 +1,18 @@
 package home.tm.configuration;
 
+import home.tm.ai.AiAgent;
 import home.tm.quartz.TimeKeeperJob;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-
-import java.util.Properties;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.scheduling.quartz.CronTriggerFactoryBean;
 import org.springframework.scheduling.quartz.JobDetailFactoryBean;
+
+import java.util.Properties;
 
 @Configuration
 public class AppConfiguration {
@@ -33,6 +35,8 @@ public class AppConfiguration {
     private String smtpPassword;
     @Value("${timeKeeper.job.cron}")
     private String timeKeeperJobCron;
+    @Value("${timeKeeper.job.cron}")
+    private String weeklyTrainingEvaluationJobCron;
 
     @Bean
     public JobDetailFactoryBean timeKeeperJobFactory() {
@@ -49,6 +53,24 @@ public class AppConfiguration {
         CronTriggerFactoryBean factory = new CronTriggerFactoryBean();
         factory.setJobDetail(timeKeeperJobFactory().getObject());
         factory.setCronExpression(timeKeeperJobCron);
+        return factory;
+    }
+
+    @Bean
+    public JobDetailFactoryBean weeklyTrainingEvaluationJobFactory() {
+        JobDetailFactoryBean factory = new JobDetailFactoryBean();
+        factory.setJobClass(TimeKeeperJob.class);
+        factory.setName("WeeklyTrainingEvaluationJob");
+        factory.setGroup("WeeklyTrainingEvaluationJobGroup");
+        factory.setDurability(true);
+        return factory;
+    }
+
+    @Bean
+    public CronTriggerFactoryBean WeeklyTrainingEvaluationTriggerFactory() {
+        CronTriggerFactoryBean factory = new CronTriggerFactoryBean();
+        factory.setJobDetail(weeklyTrainingEvaluationJobFactory().getObject());
+        factory.setCronExpression(weeklyTrainingEvaluationJobCron);
         return factory;
     }
 
@@ -72,4 +94,25 @@ public class AppConfiguration {
 
         return mailSender;
     }
+
+    @Bean
+    public AiAgent trainingAgent(ChatClient.Builder builder) {
+        return AiAgent.builder(builder)
+                .system("""
+                            Jsi profesionální kondiční trenér.
+                        
+                            Tvým úkolem je:
+                            - vyhodnotit poslední týden tréninků
+                            - porovnat je s posledními 8 týdny
+                            - dát doporučení na příští týden
+                            - vrátit textový report
+                            - JSON bude strukturovaný jako:
+                            {
+                              "vyhodnocení progressu": "...",
+                              "report": "..."
+                            }
+                        """)
+                .build();
+    }
+
 }

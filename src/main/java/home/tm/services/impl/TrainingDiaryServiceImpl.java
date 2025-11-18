@@ -2,15 +2,20 @@ package home.tm.services.impl;
 
 import home.tm.TimeKeeper.api.models.TrainingDiaryBaseDto;
 import home.tm.TimeKeeper.api.models.TrainingDiaryDto;
+import home.tm.TimeKeeper.api.models.TrainingDto;
+import home.tm.converters.TrainingConverter;
 import home.tm.converters.TrainingDiaryConverter;
 import home.tm.exceptions.NotFoundException;
+import home.tm.model.Training;
 import home.tm.model.TrainingDiary;
 import home.tm.repositories.TrainingDiaryRepository;
 import home.tm.security.service.SecurityService;
 import home.tm.services.TrainingDiaryService;
+import home.tm.services.TrainingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static home.tm.exceptions.ExceptionMessage.TRAINING_DIARY_WAS_NOT_FOUND;
@@ -25,6 +30,8 @@ public class TrainingDiaryServiceImpl implements TrainingDiaryService {
     private final TrainingDiaryRepository trainingDiaryRepository;
     private final TrainingDiaryConverter trainingDiaryConverter;
     private final SecurityService securityService;
+    private final TrainingService trainingService;
+    private final TrainingConverter trainingConverter;
 
 
     @Override
@@ -38,7 +45,6 @@ public class TrainingDiaryServiceImpl implements TrainingDiaryService {
         TrainingDiary trainingDiary = getTrainingDiaryById(id);
         trainingDiaryRepository.delete(trainingDiary);
     }
-
 
 
     @Override
@@ -67,5 +73,19 @@ public class TrainingDiaryServiceImpl implements TrainingDiaryService {
     @Override
     public List<TrainingDiaryBaseDto> getTrainingDiaries() {
         return trainingDiaryConverter.toListBaseDto(trainingDiaryRepository.findAllByUser(securityService.getCurrentUser()));
+    }
+
+    @Override
+    public List<TrainingDto> getLastWeek(Long userId) {
+        int year = LocalDate.now().getYear();
+        List<Training> trainings =  trainingService.getWeeklyTrainings(trainingDiaryRepository.findByUserIdAndYear(userId, year));
+        return trainingConverter.toListDto(trainings);
+    }
+
+    @Override
+    public List<TrainingDto> getLast8Weeks(Long userId) {
+        int year = LocalDate.now().getYear();
+        List<Training> trainings = trainingService.getLast8WeeksTrainings(trainingDiaryRepository.findByUserIdAndYear(userId, year));
+        return trainingConverter.toListDto(trainings);
     }
 }

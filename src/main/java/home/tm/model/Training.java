@@ -29,7 +29,7 @@ public class Training {
     private TrainingType type;
 
     @OneToMany(mappedBy = "training", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Exercise> exercises = new ArrayList<>();;
+    private List<Exercise> exercises = new ArrayList<>();
 
     @Column(name = "week", nullable = false)
     private Integer week;

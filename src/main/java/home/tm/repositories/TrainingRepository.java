@@ -12,4 +12,7 @@ import java.util.List;
 public interface TrainingRepository extends JpaRepository<Training, Long>, JpaSpecificationExecutor<Training> {
 
     List<Training> findAllByTrainingDiary(TrainingDiary trainingDiary);
+    List<Training> findAllByTrainingDiaryAndWeek(TrainingDiary trainingDiary, int week);
+    List<Training> findAllByTrainingDiaryAndWeekInOrderByWeekDescDayAsc(TrainingDiary diary, List<Integer> weeks);
+
 }

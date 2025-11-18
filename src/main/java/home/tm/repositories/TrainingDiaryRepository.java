@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface TrainingDiaryRepository extends JpaRepository<TrainingDiary, Long> {
     List<TrainingDiary> findAllByUser(User currentUser);
+    TrainingDiary findByUserIdAndYear(Long userId, int year);
 }
