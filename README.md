@@ -10,7 +10,7 @@
 ____________________________________________
 
 
-# TimeKeeper - projekt slouží 
+# TimeKeeper
 
 TimeKeeper je osobní **home application** pro správu času, úkolů, financí a tréninku. Projekt vzniká primárně pro vlastní použití, s důrazem na **automatizaci**, **přehlednost** a postupnou integraci **AI asistence**.
 
