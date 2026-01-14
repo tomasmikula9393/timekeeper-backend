@@ -116,13 +116,3 @@ All rights reserved.
 This source code is private and proprietary.
 Unauthorized copying, modification, distribution,
 or use of this software, via any medium, is strictly prohibited.
-
----
-
-## 📌 Poznámka
-
-Tento projekt slouží také jako **dlouhodobý learning project** (Java, architektura, AI integrace) a není zamýšlen jako hotový produkt.
-
----
-
-> Pokud tě zajímá architektura, rozhodnutí v návrhu nebo konkrétní moduly, podívej se do zdrojového kódu nebo README jednotlivých částí.
