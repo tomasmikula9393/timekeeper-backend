@@ -18,15 +18,6 @@ Aplikace je rozdělena na **backend (Java)** a **frontend (TypeScript / React)**
 
 ---
 
-## ✨ Hlavní myšlenka projektu
-
-* mít **jedno místo** pro důležité osobní informace
-* hlídat **termíny a expirace** automaticky
-* evidovat **finance, tréninky a úkoly**
-* postupně přidat **AI analýzu a doporučení**
-
----
-
 ## 🧩 Moduly aplikace
 
 ### 📂 Data (hlídání expirací)
